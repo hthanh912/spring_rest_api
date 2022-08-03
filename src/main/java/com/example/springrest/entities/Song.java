@@ -13,13 +13,20 @@ public class Song {
   @Column(name = "title")
   private String title;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   @JoinColumn(name = "artist_id")
   private Artist artist;
 
   @Column(name = "album_id")
   private long albumId;
 
+  public Artist getArtist() {
+    return artist;
+  }
+
+  public void setArtist(Artist artist) {
+    this.artist = artist;
+  }
 
   public long getId() {
     return id;

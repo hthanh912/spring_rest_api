@@ -9,6 +9,7 @@ public class Artist {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "artist_id")
+//  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private long id;
 
   @Column(name = "name")
