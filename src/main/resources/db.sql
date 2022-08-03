@@ -1,15 +1,3 @@
-DROP TABLE IF EXISTS users;
-
-DROP TABLE IF EXISTS roles;
-
-DROP TABLE IF EXISTS users_roles;
-
-DROP TABLE IF EXISTS songs;
-
-DROP TABLE IF EXISTS albums;
-
-DROP TABLE IF EXISTS artists;
-
 -- USERS
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
@@ -27,7 +15,7 @@ INSERT INTO `users` (`username`, `password`, `enabled`) VALUES ('user', '$2a$12$
 CREATE TABLE `roles` (
   `role_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`role_id`)
 );
 
 INSERT INTO `roles` (`name`) VALUES ('ADMIN');

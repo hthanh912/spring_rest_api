@@ -17,8 +17,12 @@ public class Song {
   @JoinColumn(name = "artist_id")
   private Artist artist;
 
-  @Column(name = "album_id")
-  private long albumId;
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinColumn(name = "album_id")
+  private Album album;
+
+//  @Column(name = "album_id")
+//  private long albumId;
 
   public Artist getArtist() {
     return artist;
@@ -40,16 +44,24 @@ public class Song {
     return title;
   }
 
-  public long getAlbumId() {
-    return albumId;
-  }
-
-  public void setAlbumId(long albumId) {
-    this.albumId = albumId;
-  }
+//  public long getAlbumId() {
+//    return albumId;
+//  }
+//
+//  public void setAlbumId(long albumId) {
+//    this.albumId = albumId;
+//  }
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public Album getAlbum() {
+    return album;
+  }
+
+  public void setAlbum(Album album) {
+    this.album = album;
   }
 
   @Override
@@ -58,7 +70,7 @@ public class Song {
         "id=" + id +
         ", title='" + title + '\'' +
         ", artist'" + artist.getName() + '\'' +
-        ", albumId=" + albumId +
+//        ", albumId=" + albumId +
         '}';
   }
 }
