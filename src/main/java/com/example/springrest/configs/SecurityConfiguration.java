@@ -1,9 +1,13 @@
 package com.example.springrest.configs;
 
+import com.example.springrest.entities.ResponseObject;
 import com.example.springrest.services.UserDetailsServiceImpl;
+import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +15,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -44,7 +55,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
         .antMatchers("/user").hasAuthority("USER")
+        .antMatchers(HttpMethod.POST, "/artists/**").hasAuthority("ADMIN")
+        .antMatchers(HttpMethod.DELETE, "/artists/**").hasAuthority("ADMIN")
         .antMatchers(HttpMethod.POST, "/songs/**").hasAuthority("ADMIN")
+        .antMatchers(HttpMethod.DELETE, "/songs/**").hasAuthority("ADMIN")
         .antMatchers("/**").permitAll()
         .anyRequest().authenticated()
         .and()
@@ -53,10 +67,35 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         .logout().permitAll()
         .and()
-        .exceptionHandling().accessDeniedPage("/403")
+        .exceptionHandling().accessDeniedHandler(new AccessDeniedExceptionHandler())
         .and()
         .httpBasic();
     http.cors().disable().csrf().disable();
     ;
+  }
+
+  public class AccessDeniedExceptionHandler implements AccessDeniedHandler {
+    Gson gson = new Gson();
+    @Override
+    public void handle(HttpServletRequest request, HttpServletResponse response,
+                       AccessDeniedException ex) throws IOException, ServletException {
+      writeCustomResponse(response);
+    }
+
+    private void writeCustomResponse(HttpServletResponse response) {
+      if (!response.isCommitted()) {
+        try {
+          ResponseObject responseObject = new ResponseObject(HttpStatus.FORBIDDEN.value(), "User is not authorized.", null);
+          String responseString = gson.toJson(responseObject);
+          PrintWriter out = response.getWriter();
+          response.setContentType("application/json");
+          response.setCharacterEncoding("UTF-8");
+          out.print(responseString);
+          out.flush();
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }
   }
 }

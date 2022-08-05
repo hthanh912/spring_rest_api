@@ -22,7 +22,6 @@ INSERT INTO `roles` (`name`) VALUES ('ADMIN');
 INSERT INTO `roles` (`name`) VALUES ('USER');
 --
 
-
 -- USER_ROLES
 CREATE TABLE `users_roles` (
   `user_id` int(11) NOT NULL,
@@ -58,6 +57,8 @@ CREATE TABLE `artists` (
   PRIMARY KEY (`artist_id`)
 );
 INSERT INTO `artists` (`name`, `description`) VALUES ('Taylor Swift', 'Taylor Alison Swift (born December 13, 1989) is an American singer-songwriter. Her discography spans multiple genres, and her narrative songwriting—often inspired by her personal life—has received critical praise and widespread media coverage. Born in West Reading, Pennsylvania, Swift moved to Nashville, Tennessee, at the age of 14 to pursue a career in country music. She signed a songwriting contract with Sony/ATV Music Publishing in 2004 and a recording deal with Big Machine Records in 2005, and released her eponymous debut studio album in 2006.');
+INSERT INTO `artists` (`name`, `description`) VALUES ('Linkin Park', 'Linkin Park is an American rock band from Agoura Hills, California. The band''s current lineup comprises vocalist/rhythm guitarist/keyboardist Mike Shinoda, lead guitarist Brad Delson, bassist Dave Farrell, DJ/turntablist Joe Hahn and drummer Rob Bourdon, all of whom are founding members. Vocalists Mark Wakefield and Chester Bennington are former members of the band. Categorized as alternative rock, Linkin Park''s earlier music spanned a fusion of heavy metal and hip hop, while their later music features more electronica and pop elements.');
+INSERT INTO `artists` (`name`, `description`) VALUES ('Evanescence', 'Evanescence is an American rock band founded in Little Rock, Arkansas, in 1995 by singer, pianist, and keyboardist Amy Lee and guitarist Ben Moody. After recording independent albums, the band released their first full-length album, Fallen, on Wind-up Records in 2003. On the strength of hit singles "Bring Me to Life" and "My Immortal", Fallen sold more than 17 million copies worldwide and helped the band win two Grammy Awards out of six nominations. A year later, Evanescence released their first live album, Anywhere but Home, which sold more than one million copies worldwide. In 2006, the band released their second studio album, The Open Door, which sold more than five million copies.');
 --
 
 -- ALBUMS
