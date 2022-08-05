@@ -1,6 +1,7 @@
 package com.example.springrest.controllers;
 
 import com.example.springrest.dto.SongDTO;
+import com.example.springrest.entities.Artist;
 import com.example.springrest.entities.ResponseObject;
 import com.example.springrest.entities.Song;
 import com.example.springrest.respositories.SongRepository;
@@ -30,9 +31,19 @@ public class SongController {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", new Array[0]));
   };
 
+  @GetMapping("/artist/{id}")
+  public ResponseEntity<ResponseObject> getAllSongByArtist(@PathVariable Long id) {
+    Optional<List<Song>> songs = songRepository.findSongByArtistId(id);
+    if (songs.isPresent()) {
+      List<SongDTO> songsDto = new ArrayList<SongDTO>();
+      songs.get().forEach(song -> songsDto.add(new SongDTO(song)));
+      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + songsDto.size() + " song(s)", songsDto));
+    };
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", new Array[0]));
+  };
+
   @PostMapping("")
-  public ResponseEntity<ResponseObject> insertSong(@RequestParam(value = "title")String title, @RequestParam(value = "artist")String artist, @RequestParam(value = "album")String album) {
-    return null;
-//    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(200, "Inserted " + newSong.toString(), songRepository.save(newSong)));
+  public ResponseEntity<ResponseObject> insertSong(@RequestBody Song newSong) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(200, "Inserted " + newSong.toString(), songRepository.save(newSong)));
   };
 }
