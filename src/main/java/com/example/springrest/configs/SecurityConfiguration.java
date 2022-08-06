@@ -59,6 +59,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.DELETE, "/artists/**").hasAuthority("ADMIN")
         .antMatchers(HttpMethod.POST, "/songs/**").hasAuthority("ADMIN")
         .antMatchers(HttpMethod.DELETE, "/songs/**").hasAuthority("ADMIN")
+        .antMatchers(HttpMethod.POST, "/album/**").hasAuthority("ADMIN")
+        .antMatchers(HttpMethod.DELETE, "/album/**").hasAuthority("ADMIN")
         .antMatchers("/**").permitAll()
         .anyRequest().authenticated()
         .and()

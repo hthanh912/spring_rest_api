@@ -7,22 +7,32 @@ import javax.persistence.*;
 public class Song {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "song_id")
-  private long id;
+  private Long id;
   @Column(name = "title")
   private String title;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "artist_id")
   private Artist artist;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "album_id")
   private Album album;
 
-//  @Column(name = "album_id")
-//  private long albumId;
+  public Song() {
+
+  }
+  public Song(String title, Artist artist, Album album) {
+    this.title = title;
+    this.artist = artist;
+    this.album = album;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   public Artist getArtist() {
     return artist;
@@ -32,12 +42,8 @@ public class Song {
     this.artist = artist;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
   }
 
   public String getTitle() {

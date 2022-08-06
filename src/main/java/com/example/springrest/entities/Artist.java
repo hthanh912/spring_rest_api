@@ -1,6 +1,9 @@
 package com.example.springrest.entities;
 
+import org.springframework.data.jpa.repository.Query;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "artists")
@@ -8,7 +11,7 @@ public class Artist {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "artist_id")
-  private long id;
+  private Long id;
 
   @Column(name = "name")
   private String name;
@@ -16,11 +19,11 @@ public class Artist {
   @Column(name = "description")
   private String description;
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
