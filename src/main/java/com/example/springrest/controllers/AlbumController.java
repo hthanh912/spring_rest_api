@@ -84,7 +84,7 @@ public class AlbumController {
 
   @GetMapping("/{id}/songs")
   public ResponseEntity<ResponseObject> getAllSongsByAlbums(@PathVariable Long id) {
-    Optional<List<Song>> songs = songRepository.findSongByAlbumId(id);
+    Optional<List<Song>> songs = Optional.ofNullable(songRepository.findSongByAlbumId(id));
     if (songs.isPresent()) {
       List<SongDTO> songsDto = new ArrayList<SongDTO>();
       songs.get().forEach(song -> songsDto.add(new SongDTO(song)));

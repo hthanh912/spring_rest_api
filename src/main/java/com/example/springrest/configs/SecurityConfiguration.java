@@ -5,6 +5,7 @@ import com.example.springrest.services.UserDetailsServiceImpl;
 import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.config.PageableHandlerMethodArgumentResolverCustomizer;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -45,7 +46,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     return authProvider;
   }
-
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     auth.authenticationProvider(authenticationProvider());
