@@ -2,7 +2,9 @@ package com.example.springrest.entities;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,6 +27,14 @@ public class User {
       inverseJoinColumns = @JoinColumn(name = "role_id")
   )
   private Set<Role> roles = new HashSet<>();
+
+  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "users_songs",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "song_id")
+  )
+  private Set<Song> favoriteSongs;
 
   public Long getId() {
     return id;
@@ -64,5 +74,13 @@ public class User {
 
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
+  }
+
+  public Set<Song> getFavoriteSongs() {
+    return favoriteSongs;
+  }
+
+  public void setFavoriteSongs(Set<Song> favoriteSongs) {
+    this.favoriteSongs = favoriteSongs;
   }
 }

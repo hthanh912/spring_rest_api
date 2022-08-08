@@ -1,6 +1,9 @@
 package com.example.springrest.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "songs")
@@ -13,13 +16,16 @@ public class Song {
   @Column(name = "title")
   private String title;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "artist_id")
   private Artist artist;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "album_id")
   private Album album;
+
+  @ManyToMany(mappedBy = "favoriteSongs")
+  private Set<User> users;
 
   public Song() {
 
@@ -50,14 +56,6 @@ public class Song {
     return title;
   }
 
-//  public long getAlbumId() {
-//    return albumId;
-//  }
-//
-//  public void setAlbumId(long albumId) {
-//    this.albumId = albumId;
-//  }
-
   public void setTitle(String title) {
     this.title = title;
   }
@@ -68,6 +66,14 @@ public class Song {
 
   public void setAlbum(Album album) {
     this.album = album;
+  }
+
+  public Set<User> getUsers() {
+    return users;
+  }
+
+  public void setUsers(Set<User> users) {
+    this.users = users;
   }
 
   @Override

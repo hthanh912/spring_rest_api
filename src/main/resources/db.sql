@@ -80,3 +80,11 @@ INSERT INTO `albums` (`title`, `description`, `artist_id`) VALUES ('Red', 'Red i
 INSERT INTO `albums` (`title`, `description`, `artist_id`) VALUES ('My Head Is an Animal', 'My Head Is an Animal is the debut studio album by the Icelandic indie folk band Of Monsters and Men,[2] released through Record Records in Iceland on 20 September 2011. After their success, topping the Icelandic charts with their debut single, \"Little Talks\", the band signed with Universal Music Group and the album was released internationally through Republic Records on 3 April 2012. The title of the album comes from the second line in \"Dirty Paws\".', 4);
 
 --
+
+CREATE TABLE `users_songs` (
+    `user_id` int(11),
+    `song_id` int(11),
+    PRIMARY KEY (`user_id`, `song_id`)
+);
+
+INSERT INTO `users_songs` VALUES(1,1);

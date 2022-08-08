@@ -40,7 +40,6 @@ public class SongController {
     Optional<String> orderByParam = Optional.ofNullable(orderBy);
     Sort.Direction order = Sort.Direction.ASC;
     if (orderByParam.isPresent()) {
-      System.out.println(orderByParam.get());
       if (orderByParam.get().equals("desc")) {
         order = Sort.Direction.DESC;
       }
