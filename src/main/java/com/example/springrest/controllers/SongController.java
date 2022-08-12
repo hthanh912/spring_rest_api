@@ -8,6 +8,7 @@ import com.example.springrest.entities.Song;
 import com.example.springrest.respositories.AlbumRepository;
 import com.example.springrest.respositories.ArtistRepository;
 import com.example.springrest.respositories.SongRepository;
+import com.example.springrest.services.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +32,13 @@ public class SongController {
   ArtistRepository artistRepository;
   @Autowired
   AlbumRepository albumRepository;
+
+  private final SongService songService;
+
+  @Autowired
+  public SongController(SongService songService) {
+    this.songService = songService;
+  }
 
   @GetMapping("")
   public ResponseEntity<ResponseObject> getAllSongs(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size, @RequestParam(required = false) String orderBy) {
@@ -73,11 +81,12 @@ public class SongController {
 
   @GetMapping("/{id}")
   public ResponseEntity<ResponseObject> getSongById(@PathVariable Long id) {
-    Optional<Song> song = songRepository.findById(id);
-    if (song.isPresent()) {
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found song id " + song.get().getId(), new SongDTO(song.get())));
-    }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", null));
+//    Optional<SongDTO> song = Optional.ofNullable(songService.findById(id));
+//    if (song.isPresent()) {
+//      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found song id " + song.get().getId(), new SongDTO(song.get())));
+//    }
+//    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", null));
+    return this.songService.findById(id);
   }
 
   @DeleteMapping("/{id}")
