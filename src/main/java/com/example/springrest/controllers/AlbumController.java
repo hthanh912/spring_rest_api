@@ -4,19 +4,19 @@ import com.example.springrest.dto.AlbumDTO;
 import com.example.springrest.dto.SongDTO;
 import com.example.springrest.entities.Album;
 import com.example.springrest.entities.Artist;
-import com.example.springrest.entities.ResponseObject;
+import com.example.springrest.dto.ResponseObject;
 import com.example.springrest.entities.Song;
 import com.example.springrest.respositories.AlbumRepository;
 
 import com.example.springrest.respositories.ArtistRepository;
 import com.example.springrest.respositories.SongRepository;
+import com.example.springrest.services.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,13 @@ public class AlbumController {
   @Autowired
   SongRepository songRepository;
 
+  private final AlbumService albumService;
+
+  @Autowired
+  public AlbumController(AlbumService albumService) {
+    this.albumService = albumService;
+  }
+
   @GetMapping("")
   public ResponseEntity<ResponseObject> getAllAlbum() {
     Optional<List<Album>> albums = Optional.of(albumRepository.findAll());
@@ -46,11 +53,14 @@ public class AlbumController {
 
   @GetMapping("/{id}")
   public ResponseEntity<ResponseObject> getAlbumById(@PathVariable Long id) {
-    Optional<Album> album = albumRepository.findById(id);
-    if (album.isPresent()) {
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found album id " + album.get().getId(), new AlbumDTO(album.get())));
-    };
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", null));
+    AlbumDTO albumDTO = this.albumService.findById(id);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new ResponseObject(200, "Found album id " + albumDTO.getId(), albumDTO));
+//    Optional<Album> album = albumRepository.findById(id);
+//    if (album.isPresent()) {
+//      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found album id " + album.get().getId(), new AlbumDTO(album.get())));
+//    };
+//    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", null));
   };
 
   @PostMapping(value = "")

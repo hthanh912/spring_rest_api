@@ -1,4 +1,4 @@
-package com.example.springrest.services;
+package com.example.springrest.services.impl;
 
 import com.example.springrest.entities.CustomUserDetails;
 import com.example.springrest.entities.User;

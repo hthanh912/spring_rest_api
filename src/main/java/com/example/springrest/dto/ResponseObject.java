@@ -1,4 +1,4 @@
-package com.example.springrest.entities;
+package com.example.springrest.dto;
 
 public class ResponseObject {
   private String message;
@@ -9,6 +9,11 @@ public class ResponseObject {
     this.status = status;
     this.message = message;
     this.data = data;
+  }
+
+  public ResponseObject(Integer status, String message) {
+    this.message = message;
+    this.status = status;
   }
 
   public String getMessage() {

@@ -16,11 +16,11 @@ public class Song {
   @Column(name = "title")
   private String title;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "artist_id")
   private Artist artist;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "album_id")
   private Album album;
 

@@ -1,14 +1,17 @@
 package com.example.springrest.controllers;
 
 import com.example.springrest.dto.AlbumDTO;
+import com.example.springrest.dto.ArtistDTO;
 import com.example.springrest.dto.SongDTO;
 import com.example.springrest.entities.Album;
 import com.example.springrest.entities.Artist;
-import com.example.springrest.entities.ResponseObject;
+import com.example.springrest.dto.ResponseObject;
 import com.example.springrest.entities.Song;
 import com.example.springrest.respositories.AlbumRepository;
 import com.example.springrest.respositories.ArtistRepository;
 import com.example.springrest.respositories.SongRepository;
+import com.example.springrest.services.ArtistService;
+import com.example.springrest.services.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +37,13 @@ public class ArtistController {
   @Autowired
   AlbumRepository albumRepository;
 
+  private final ArtistService artistService;
+
+  @Autowired
+  public ArtistController(ArtistService artistService) {
+    this.artistService = artistService;
+  }
+
   @GetMapping("")
   public ResponseEntity<ResponseObject> getAllArtists() {
     Optional<List<Artist>> artists = Optional.of(artistRepository.findAll());
@@ -50,11 +60,8 @@ public class ArtistController {
 
   @GetMapping(value = "/{id}")
   public ResponseEntity<ResponseObject> getArtistById(@PathVariable Long id) {
-    Optional<Artist> artist = artistRepository.findById(id);
-    if (artist.isPresent()) {
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + artist.get().getName(), artist));
-    }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", null));
+    ArtistDTO artistDTO = this.artistService.findById(id);
+    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + artistDTO.getName(), artistDTO));
   }
 
   @GetMapping(value = "/{id}/albums")

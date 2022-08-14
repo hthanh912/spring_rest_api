@@ -3,12 +3,13 @@ package com.example.springrest.controllers;
 import com.example.springrest.dto.SongDTO;
 import com.example.springrest.entities.Album;
 import com.example.springrest.entities.Artist;
-import com.example.springrest.entities.ResponseObject;
+import com.example.springrest.dto.ResponseObject;
 import com.example.springrest.entities.Song;
 import com.example.springrest.respositories.AlbumRepository;
 import com.example.springrest.respositories.ArtistRepository;
 import com.example.springrest.respositories.SongRepository;
 import com.example.springrest.services.SongService;
+import exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,52 +42,36 @@ public class SongController {
   }
 
   @GetMapping("")
-  public ResponseEntity<ResponseObject> getAllSongs(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size, @RequestParam(required = false) String orderBy) {
-    Integer pageParam = Optional.ofNullable(page).orElse(0);
-    Integer sizeParam = Optional.ofNullable(size).orElse(2);
-
-    Optional<String> orderByParam = Optional.ofNullable(orderBy);
-    Sort.Direction order = Sort.Direction.ASC;
-    if (orderByParam.isPresent()) {
-      if (orderByParam.get().equals("desc")) {
-        order = Sort.Direction.DESC;
-      }
-    }
-
-    Pageable pageable = PageRequest.of(pageParam, sizeParam, Sort.by(order, "title"));
-
-    Optional<Page<Song>> songs = Optional.ofNullable(songRepository.findAll(pageable));
-    if (songs.isPresent()) {
-      List<SongDTO> songsDto = new ArrayList<SongDTO>();
-      songs.get().forEach(song -> songsDto.add(new SongDTO(song)));
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + songsDto.size() + " song(s)", songsDto));
-    }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", new Array[0]));
+  public ResponseEntity<ResponseObject> getAllSongs(Pageable pageable) {
+    List<SongDTO> songDTOS = this.songService.getAllSong(pageable);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new ResponseObject(HttpStatus.OK.value(), "Found " + songDTOS.size() + " song(s)",songDTOS));
   }
 
   @PostMapping("")
   public ResponseEntity<ResponseObject> insertSong(@RequestParam String title, @RequestParam Long artistId, @RequestParam Long albumId) {
-    Optional<Artist> artist = artistRepository.findById(artistId);
-    if (artist.isEmpty()) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "Not found artist id " + artistId, null));
-    }
-    Optional<Album> album = albumRepository.findById(albumId);
-    if (album.isEmpty()) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "Not found Album id " + artistId, null));
-    }
-    Song newSong = new Song(title, artist.get(), album.get());
+//    Optional<Artist> artist = artistRepository.findById(artistId);
+//    if (artist.isEmpty()) {
+//      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "Not found artist id " + artistId, null));
+//    }
+//    Optional<Album> album = albumRepository.findById(albumId);
+//    if (album.isEmpty()) {
+//      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "Not found Album id " + artistId, null));
+//    }
+//    Song newSong = new Song(title, artist.get(), album.get());
+//
+//    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(200, "Inserted " + newSong.getTitle(), songRepository.save(newSong)));
+    SongDTO insertedSong = this.songService.insertSong(title, artistId, albumId);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new ResponseObject(HttpStatus.OK.value(), "inserted " + insertedSong.getTitle(), insertedSong));
 
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(200, "Inserted " + newSong.getTitle(), songRepository.save(newSong)));
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<ResponseObject> getSongById(@PathVariable Long id) {
-//    Optional<SongDTO> song = Optional.ofNullable(songService.findById(id));
-//    if (song.isPresent()) {
-//      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found song id " + song.get().getId(), new SongDTO(song.get())));
-//    }
-//    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", null));
-    return this.songService.findById(id);
+    SongDTO songDTO = this.songService.findById(id);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new ResponseObject(HttpStatus.OK.value(),"Found song id " + songDTO.getId(), songDTO));
   }
 
   @DeleteMapping("/{id}")

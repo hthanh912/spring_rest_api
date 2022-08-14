@@ -1,11 +1,10 @@
 package com.example.springrest.configs;
 
-import com.example.springrest.entities.ResponseObject;
-import com.example.springrest.services.UserDetailsServiceImpl;
+import com.example.springrest.dto.ResponseObject;
+import com.example.springrest.services.impl.UserDetailsServiceImpl;
 import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.web.config.PageableHandlerMethodArgumentResolverCustomizer;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
