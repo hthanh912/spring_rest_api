@@ -1,9 +1,17 @@
 package com.example.springrest.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "albums")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Album {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,53 +28,10 @@ public class Album {
   @JoinColumn(name = "artist_id")
   private Artist artist;
 
-  public Album(){
-
-  }
   public Album(String title, String description, Artist artist) {
     this.title = title;
     this.description = description;
     this.artist = artist;
   }
 
-  public Artist getArtist() {
-    return artist;
-  }
-
-  public void setArtist(Artist artist) {
-    this.artist = artist;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  @Override
-  public String toString() {
-    return "Album{" +
-        "id=" + id +
-        ", title='" + title + '\'' +
-        ", description='" + description + '\'' +
-        '}';
-  }
 }
