@@ -10,4 +10,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ArtistService {
   ArtistDTO findById(Long id) throws ResourceNotFoundException;
+  List<SongDTO> getSongByArtistId(Long id) throws ResourceNotFoundException;
 }

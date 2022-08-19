@@ -15,6 +15,7 @@ public interface SongService {
   SongDTO findById(Long id) throws ResourceNotFoundException;
   List<SongDTO> getAllSong(Pageable pageable);
   List<SongDTO> getSongsByAlbumId(Long albumId);
+  List<SongDTO> getSongsByArtistId(Long artistId);
   SongDTO insertSong(String title, Long artistId, Long albumId) throws ResourceNotFoundException;
-  Void deleteSong(Long id) throws ResourceNotFoundException;
+  void deleteSong(Long id) throws ResourceNotFoundException;
 }

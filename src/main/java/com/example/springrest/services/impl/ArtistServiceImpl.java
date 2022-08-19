@@ -10,14 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Lazy;
+
 
 @Service
 public class ArtistServiceImpl implements ArtistService {
 
   private final ArtistRepository artistRepository;
+  private final SongService songService;
 
   @Autowired
-  public ArtistServiceImpl(ArtistRepository artistRepository) {
+  public ArtistServiceImpl(ArtistRepository artistRepository, @Lazy SongService songService) {
     this.artistRepository = artistRepository;
   }
 
@@ -26,5 +29,10 @@ public class ArtistServiceImpl implements ArtistService {
     Artist artist = this.artistRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Not found artist id " + id));
     return new ArtistDTO(artist);
+  }
+
+  @Override
+  public List<SongDTO> getSongByArtistId(Long id) throws ResourceNotFoundException {
+    return this.songService.getSongsByArtistId(id);
   }
 }

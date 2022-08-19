@@ -55,7 +55,16 @@ public class SongServiceImpl implements SongService {
         .stream()
         .map(song -> new SongDTO(song))
         .toList();
-    System.out.println(listSong);
+    return listSong;
+  }
+
+  @Override
+  public List<SongDTO> getSongsByArtistId(Long artistId) {
+    List<SongDTO> listSong = this.songRepository.findByArtistId(artistId)
+        .stream()
+        .map(song -> new SongDTO(song))
+        .toList();
+    System.out.println("getSongsByArtistId" + listSong);
     return listSong;
   }
 
@@ -73,11 +82,13 @@ public class SongServiceImpl implements SongService {
   }
 
   @Override
-  public Void deleteSong(Long id) throws ResourceNotFoundException {
-    Song song = this.songRepository.findById(id)
-        .orElseThrow(()-> new ResourceNotFoundException());
-    this.songRepository.deleteById(song.getId());
-    return void;
+  public void deleteSong(Long id) throws ResourceNotFoundException {
+    // Song song = this.songRepository.findById(id)
+    //     .orElseThrow(()-> new ResourceNotFoundException());
+    // this.songRepository.deleteById(song.getId());
+    if (this.songRepository.existsById(id)){
+      this.songRepository.deleteById(id);
+    }
   }
 
 }

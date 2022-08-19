@@ -87,26 +87,28 @@ public class ArtistController {
 
   @GetMapping("/{id}/songs")
   public ResponseEntity<ResponseObject> getAllSongsByArtist(@PathVariable Long id, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size, @RequestParam(required = false) String orderBy) {
-    Integer pageParam = Optional.ofNullable(page).orElse(0);
-    Integer sizeParam = Optional.ofNullable(size).orElse(2);
+    // Integer pageParam = Optional.ofNullable(page).orElse(0);
+    // Integer sizeParam = Optional.ofNullable(size).orElse(2);
 
-    Optional<String> orderByParam = Optional.ofNullable(orderBy);
-    Sort.Direction order = Sort.Direction.ASC;
-    if (orderByParam.isPresent()) {
-      System.out.println(orderByParam.get());
-      if (orderByParam.get().equals("desc")) {
-        order = Sort.Direction.DESC;
-      }
-    }
+    // Optional<String> orderByParam = Optional.ofNullable(orderBy);
+    // Sort.Direction order = Sort.Direction.ASC;
+    // if (orderByParam.isPresent()) {
+    //   System.out.println(orderByParam.get());
+    //   if (orderByParam.get().equals("desc")) {
+    //     order = Sort.Direction.DESC;
+    //   }
+    // }
 
-    Pageable pageable = PageRequest.of(pageParam, sizeParam, Sort.by(order, "title"));
-    Optional<Page<Song>> songs = Optional.ofNullable(songRepository.findSongByArtistId(id, pageable));
-    if (songs.isPresent()) {
-      List<SongDTO> songsDto = new ArrayList<SongDTO>();
-      songs.get().forEach(song -> songsDto.add(new SongDTO(song)));
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + songsDto.size() + " song(s) in page " + page, songsDto));
-    }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", new Array[0]));
+    // Pageable pageable = PageRequest.of(pageParam, sizeParam, Sort.by(order, "title"));
+    // Optional<Page<Song>> songs = Optional.ofNullable(songRepository.findSongByArtistId(id, pageable));
+    // if (songs.isPresent()) {
+    //   List<SongDTO> songsDto = new ArrayList<SongDTO>();
+    //   songs.get().forEach(song -> songsDto.add(new SongDTO(song)));
+    //   return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + songsDto.size() + " song(s) in page " + page, songsDto));
+    // }
+    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", new Array[0]));
+    List<SongDTO> listSong = this.songService.getSongByArtistId(id);
+    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200,"Found ", listSong));
   }
 
 }
