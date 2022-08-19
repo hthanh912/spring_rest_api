@@ -42,13 +42,8 @@ public class AlbumController {
 
   @GetMapping("")
   public ResponseEntity<ResponseObject> getAllAlbum() {
-    Optional<List<Album>> albums = Optional.of(albumRepository.findAll());
-    if (albums.isPresent()) {
-      List<AlbumDTO> albumDTOs = new ArrayList<>();
-      albums.get().forEach(album -> albumDTOs.add(new AlbumDTO(album)));
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + albums.get().size() + " artist(s)", albumDTOs));
-    };
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", new Array[0]));
+    List<AlbumDTO> albumDTOs = this.albumService.findAll();
+    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + albumDTOs.size() + " artist(s)", albumDTOs));
   };
 
   @GetMapping("/{id}")
@@ -56,11 +51,6 @@ public class AlbumController {
     AlbumDTO albumDTO = this.albumService.findById(id);
     return ResponseEntity.status(HttpStatus.OK)
         .body(new ResponseObject(200, "Found album id " + albumDTO.getId(), albumDTO));
-//    Optional<Album> album = albumRepository.findById(id);
-//    if (album.isPresent()) {
-//      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found album id " + album.get().getId(), new AlbumDTO(album.get())));
-//    };
-//    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", null));
   };
 
   @PostMapping(value = "")
@@ -94,12 +84,16 @@ public class AlbumController {
 
   @GetMapping("/{id}/songs")
   public ResponseEntity<ResponseObject> getAllSongsByAlbums(@PathVariable Long id) {
-    Optional<List<Song>> songs = Optional.ofNullable(songRepository.findSongByAlbumId(id));
-    if (songs.isPresent()) {
-      List<SongDTO> songsDto = new ArrayList<SongDTO>();
-      songs.get().forEach(song -> songsDto.add(new SongDTO(song)));
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + songsDto.size() + " song(s)", songsDto));
-    };
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", new Array[0]));
+//    Optional<List<Song>> songs = Optional.ofNullable(songRepository.findSongByAlbumId(id));
+//    if (songs.isPresent()) {
+//      List<SongDTO> songsDto = new ArrayList<SongDTO>();
+//      songs.get().forEach(song -> songsDto.add(new SongDTO(song)));
+//      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + songsDto.size() + " song(s)", songsDto));
+//    };
+//    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", new Array[0]));
+          return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found "+ " song(s)", this.albumService.getAllSongByAlbumId(id)));
+
+    //return this.albumService.findAllByAlbumId(id);
+
   };
 }

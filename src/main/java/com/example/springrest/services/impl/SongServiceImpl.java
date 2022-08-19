@@ -13,6 +13,7 @@ import com.example.springrest.services.SongService;
 import exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -27,7 +28,7 @@ public class SongServiceImpl implements SongService {
   private static final ModelMapper modelMapper = new ModelMapper();
 
   @Autowired
-  public SongServiceImpl(SongRepository songRepository, ArtistService artistService, AlbumService albumService) {
+  public SongServiceImpl(SongRepository songRepository, @Lazy ArtistService artistService,@Lazy AlbumService albumService) {
     this.songRepository = songRepository;
     this.artistService = artistService;
     this.albumService = albumService;
@@ -49,6 +50,16 @@ public class SongServiceImpl implements SongService {
   }
 
   @Override
+  public List<SongDTO> getSongsByAlbumId(Long albumId) {
+    List<SongDTO> listSong = this.songRepository.findByAlbumId(albumId)
+        .stream()
+        .map(song -> new SongDTO(song))
+        .toList();
+    System.out.println(listSong);
+    return listSong;
+  }
+
+  @Override
   public SongDTO insertSong(String title, Long artistId, Long albumId) throws ResourceNotFoundException {
     ArtistDTO artistDTO = this.artistService.findById(artistId);
     Artist artist = modelMapper.map(artistDTO, Artist.class);
@@ -59,6 +70,14 @@ public class SongServiceImpl implements SongService {
     Song newSong = new Song(title, artist, album);
     Song insertedSong = this.songRepository.save(newSong);
     return new SongDTO(insertedSong);
+  }
+
+  @Override
+  public Void deleteSong(Long id) throws ResourceNotFoundException {
+    Song song = this.songRepository.findById(id)
+        .orElseThrow(()-> new ResourceNotFoundException());
+    this.songRepository.deleteById(song.getId());
+    return void;
   }
 
 }

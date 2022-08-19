@@ -14,5 +14,7 @@ import java.util.List;
 public interface SongService {
   SongDTO findById(Long id) throws ResourceNotFoundException;
   List<SongDTO> getAllSong(Pageable pageable);
+  List<SongDTO> getSongsByAlbumId(Long albumId);
   SongDTO insertSong(String title, Long artistId, Long albumId) throws ResourceNotFoundException;
+  Void deleteSong(Long id) throws ResourceNotFoundException;
 }

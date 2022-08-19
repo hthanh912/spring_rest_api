@@ -10,5 +10,5 @@ import java.util.List;
 public interface SongRepository extends PagingAndSortingRepository<Song, Long> {
   public Page<Song> findAll(Pageable pageable);
   public Page<Song> findSongByArtistId(Long id, Pageable pageable);
-  public List<Song> findSongByAlbumId(Long id);
+  public List<Song> findByAlbumId(Long id);
 }
