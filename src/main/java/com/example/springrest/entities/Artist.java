@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "artists")
@@ -22,4 +23,12 @@ public class Artist {
   @Column(name = "description")
   private String description;
 
+  @OneToMany()
+  @JoinColumn(name = "song_id")
+  private Set<Song> listSong;
+
+  public Artist(String name, String description) {
+    this.name = name;
+    this.description = description;
+  }
 }

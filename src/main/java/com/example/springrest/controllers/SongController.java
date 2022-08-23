@@ -1,37 +1,20 @@
 package com.example.springrest.controllers;
 
 import com.example.springrest.dto.SongDTO;
-import com.example.springrest.entities.Album;
-import com.example.springrest.entities.Artist;
 import com.example.springrest.dto.ResponseObject;
-import com.example.springrest.entities.Song;
-import com.example.springrest.respositories.AlbumRepository;
-import com.example.springrest.respositories.ArtistRepository;
-import com.example.springrest.respositories.SongRepository;
 import com.example.springrest.services.SongService;
-import exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/songs")
 public class SongController {
-  @Autowired
-  SongRepository songRepository;
-
   private final SongService songService;
-
   @Autowired
   public SongController(SongService songService) {
     this.songService = songService;
@@ -60,11 +43,7 @@ public class SongController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<ResponseObject> deleteSong(@PathVariable Long id) {
-    Optional<Song> song = songRepository.findById(id);
-    if (song.isPresent()) {
-      songRepository.deleteById(song.get().getId());
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Deleted song id " + id, null));
-    } else
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(200, "Not found song id " + id, null));
+    this.songService.deleteSong(id);
+    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Deleted song id " + id));
   }
 }

@@ -9,7 +9,9 @@ import java.util.List;
 
 @Service
 public interface AlbumService {
-  List<AlbumDTO> findAll() throws ResourceNotFoundException;
+  List<AlbumDTO> getAllAlbum() throws ResourceNotFoundException;
   AlbumDTO findById(Long id) throws ResourceNotFoundException;
   List<SongDTO> getAllSongByAlbumId(Long id) throws ResourceNotFoundException;
+  AlbumDTO insertAlbum(String title, String description, Long albumId);
+  void deleteAlbum(Long id) throws ResourceNotFoundException;
 }

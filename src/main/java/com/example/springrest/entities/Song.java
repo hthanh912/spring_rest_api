@@ -21,15 +21,15 @@ public class Song {
   @Column(name = "title")
   private String title;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "artist_id")
   private Artist artist;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "album_id")
   private Album album;
 
-  @ManyToMany(mappedBy = "favoriteSongs")
+  @ManyToMany(mappedBy = "favoriteSongs", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
   private Set<User> users;
 
   public Song(String title, Artist artist, Album album) {

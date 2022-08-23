@@ -33,8 +33,6 @@ public class ArtistController {
   ArtistRepository artistRepository;
 
   @Autowired
-  SongRepository songRepository;
-  @Autowired
   AlbumRepository albumRepository;
 
   private final ArtistService artistService;
@@ -46,21 +44,19 @@ public class ArtistController {
 
   @GetMapping("")
   public ResponseEntity<ResponseObject> getAllArtists() {
-    Optional<List<Artist>> artists = Optional.of(artistRepository.findAll());
-    if (artists.isPresent()) {
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + artists.get().size() + " artist(s)", artists.get()));
-    }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", new Array[0]));
+    List<ArtistDTO> listArtist = this.artistService.getAllArtist();
+    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "Found " + listArtist.size() + " artist(s)", listArtist));
   }
 
   @PostMapping(value = "")
   public ResponseEntity<ResponseObject> insertArtist(@RequestBody Artist artist) {
-    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Inserted " + artist.getName(), artistRepository.save(artist)));
+    ArtistDTO insertedArtist = this.artistService.insertArtist(artist);
+    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Inserted " + insertedArtist.getName(), insertedArtist));
   }
 
   @GetMapping(value = "/{id}")
   public ResponseEntity<ResponseObject> getArtistById(@PathVariable Long id) {
-    ArtistDTO artistDTO = this.artistService.findById(id);
+    ArtistDTO artistDTO = this.artistService.getArtistById(id);
     return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + artistDTO.getName(), artistDTO));
   }
 
@@ -86,28 +82,8 @@ public class ArtistController {
   }
 
   @GetMapping("/{id}/songs")
-  public ResponseEntity<ResponseObject> getAllSongsByArtist(@PathVariable Long id, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size, @RequestParam(required = false) String orderBy) {
-    // Integer pageParam = Optional.ofNullable(page).orElse(0);
-    // Integer sizeParam = Optional.ofNullable(size).orElse(2);
-
-    // Optional<String> orderByParam = Optional.ofNullable(orderBy);
-    // Sort.Direction order = Sort.Direction.ASC;
-    // if (orderByParam.isPresent()) {
-    //   System.out.println(orderByParam.get());
-    //   if (orderByParam.get().equals("desc")) {
-    //     order = Sort.Direction.DESC;
-    //   }
-    // }
-
-    // Pageable pageable = PageRequest.of(pageParam, sizeParam, Sort.by(order, "title"));
-    // Optional<Page<Song>> songs = Optional.ofNullable(songRepository.findSongByArtistId(id, pageable));
-    // if (songs.isPresent()) {
-    //   List<SongDTO> songsDto = new ArrayList<SongDTO>();
-    //   songs.get().forEach(song -> songsDto.add(new SongDTO(song)));
-    //   return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + songsDto.size() + " song(s) in page " + page, songsDto));
-    // }
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", new Array[0]));
-    List<SongDTO> listSong = this.songService.getSongByArtistId(id);
+  public ResponseEntity<ResponseObject> getAllSongsByArtist(@PathVariable Long id) {
+    List<SongDTO> listSong = this.artistService.getSongByArtistId(id);
     return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200,"Found ", listSong));
   }
 

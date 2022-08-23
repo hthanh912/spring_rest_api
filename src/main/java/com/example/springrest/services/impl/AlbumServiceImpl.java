@@ -1,12 +1,17 @@
 package com.example.springrest.services.impl;
 
 import com.example.springrest.dto.AlbumDTO;
+import com.example.springrest.dto.ArtistDTO;
 import com.example.springrest.dto.SongDTO;
 import com.example.springrest.entities.Album;
+import com.example.springrest.entities.Artist;
 import com.example.springrest.respositories.AlbumRepository;
 import com.example.springrest.services.AlbumService;
+import com.example.springrest.services.ArtistService;
 import com.example.springrest.services.SongService;
+
 import exception.ResourceNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -18,16 +23,19 @@ public class AlbumServiceImpl implements AlbumService {
 
   private final AlbumRepository albumRepository;
   private final SongService songService;
+  private final ArtistService artistService;
+  private static final ModelMapper modelMapper = new ModelMapper();
 
   @Autowired
-  public AlbumServiceImpl(AlbumRepository albumRepository,@Lazy SongService songService) {
+  public AlbumServiceImpl(AlbumRepository albumRepository, @Lazy SongService songService, @Lazy ArtistService artistService) {
     this.albumRepository = albumRepository;
     this.songService = songService;
+    this.artistService = artistService;
   }
 
   @Override
-  public List<AlbumDTO> findAll() throws ResourceNotFoundException {
-    return albumRepository.findAll().stream().map(album -> new AlbumDTO(album)).toList();
+  public List<AlbumDTO> getAllAlbum() throws ResourceNotFoundException {
+    return albumRepository.findAll().stream().map(AlbumDTO::new).toList();
   }
 
   @Override
@@ -40,5 +48,20 @@ public class AlbumServiceImpl implements AlbumService {
   @Override
   public List<SongDTO> getAllSongByAlbumId(Long albumId) throws ResourceNotFoundException {
     return this.songService.getSongsByAlbumId(albumId);
+  }
+
+  @Override
+  public AlbumDTO insertAlbum(String title, String description, Long artistId) {
+    ArtistDTO artistDTO = this.artistService.getArtistById(artistId);
+    Artist artist = modelMapper.map(artistDTO, Artist.class);
+    Album newAlbum = this.albumRepository.save(new Album(title, description, artist));
+    return new AlbumDTO(newAlbum);
+  }
+
+  @Override
+  public void deleteAlbum(Long id) throws ResourceNotFoundException {
+    if (this.albumRepository.existsById(id)) {
+      this.albumRepository.deleteById(id);
+    } else throw new ResourceNotFoundException("Not found album id " + id);
   }
 }

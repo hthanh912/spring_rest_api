@@ -43,34 +43,31 @@ public class SongServiceImpl implements SongService {
 
   @Override
   public List<SongDTO> getAllSong(Pageable pageable) {
-    List<SongDTO> songDTOS = this.songRepository.findAll(pageable)
-        .map(song -> new SongDTO(song))
+    return this.songRepository.findAll(pageable)
+        .map(SongDTO::new)
         .toList();
-    return songDTOS;
   }
 
   @Override
   public List<SongDTO> getSongsByAlbumId(Long albumId) {
-    List<SongDTO> listSong = this.songRepository.findByAlbumId(albumId)
+    return this.songRepository.findByAlbumId(albumId)
         .stream()
-        .map(song -> new SongDTO(song))
+        .map(SongDTO::new)
         .toList();
-    return listSong;
   }
 
   @Override
   public List<SongDTO> getSongsByArtistId(Long artistId) {
     List<SongDTO> listSong = this.songRepository.findByArtistId(artistId)
         .stream()
-        .map(song -> new SongDTO(song))
+        .map(SongDTO::new)
         .toList();
-    System.out.println("getSongsByArtistId" + listSong);
     return listSong;
   }
 
   @Override
   public SongDTO insertSong(String title, Long artistId, Long albumId) throws ResourceNotFoundException {
-    ArtistDTO artistDTO = this.artistService.findById(artistId);
+    ArtistDTO artistDTO = this.artistService.getArtistById(artistId);
     Artist artist = modelMapper.map(artistDTO, Artist.class);
 
     AlbumDTO albumDTO = this.albumService.findById(albumId);
@@ -83,9 +80,6 @@ public class SongServiceImpl implements SongService {
 
   @Override
   public void deleteSong(Long id) throws ResourceNotFoundException {
-    // Song song = this.songRepository.findById(id)
-    //     .orElseThrow(()-> new ResourceNotFoundException());
-    // this.songRepository.deleteById(song.getId());
     if (this.songRepository.existsById(id)){
       this.songRepository.deleteById(id);
     }
