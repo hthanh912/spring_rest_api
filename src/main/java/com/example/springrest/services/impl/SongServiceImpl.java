@@ -58,11 +58,10 @@ public class SongServiceImpl implements SongService {
 
   @Override
   public List<SongDTO> getSongsByArtistId(Long artistId) {
-    List<SongDTO> listSong = this.songRepository.findByArtistId(artistId)
+    return this.songRepository.findSongByArtistId(artistId)
         .stream()
         .map(SongDTO::new)
         .toList();
-    return listSong;
   }
 
   @Override

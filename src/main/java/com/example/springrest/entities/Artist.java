@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,9 +24,13 @@ public class Artist {
   @Column(name = "description")
   private String description;
 
-  @OneToMany()
-  @JoinColumn(name = "song_id")
-  private Set<Song> listSong;
+  @OneToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "artists_songs",
+      joinColumns = @JoinColumn(name = "artist_id"),
+      inverseJoinColumns = @JoinColumn(name = "song_id")
+  )
+  private Set<Song> listSong = new HashSet<>();;
 
   public Artist(String name, String description) {
     this.name = name;

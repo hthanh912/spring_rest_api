@@ -33,7 +33,7 @@ public class User {
   )
   private Set<Role> roles = new HashSet<>();
 
-  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH}, fetch = FetchType.LAZY)
+  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(
       name = "users_songs",
       joinColumns = @JoinColumn(name = "user_id"),

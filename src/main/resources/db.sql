@@ -1,3 +1,7 @@
+drop database if exists db;
+create database db;
+use db;
+
 -- USERS
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
@@ -84,7 +88,19 @@ INSERT INTO `albums` (`title`, `description`, `artist_id`) VALUES ('My Head Is a
 CREATE TABLE `users_songs` (
     `user_id` int(11),
     `song_id` int(11),
-    PRIMARY KEY (`user_id`, `song_id`)
+	CONSTRAINT `users_songs_fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `users_songs_fk_song` FOREIGN KEY (`song_id`) REFERENCES `songs` (`song_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 INSERT INTO `users_songs` VALUES(1,1);
+
+
+
+CREATE TABLE `artists_songs` (
+    `artist_id` int(11),
+    `song_id` int(11),
+    CONSTRAINT `artist_fk` FOREIGN KEY (`artist_id`) REFERENCES `artists` (`artist_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `song_fk` FOREIGN KEY (`song_id`) REFERENCES `songs` (`song_id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO `artists_songs` (`artist_id`, `song_id`) VALUES (1,1);

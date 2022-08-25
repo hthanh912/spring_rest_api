@@ -21,7 +21,7 @@ public class Song {
   @Column(name = "title")
   private String title;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @ManyToOne()
   @JoinColumn(name = "artist_id")
   private Artist artist;
 
