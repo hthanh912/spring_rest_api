@@ -25,11 +25,6 @@ public class Artist {
   private String description;
 
   @OneToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "artists_songs",
-      joinColumns = @JoinColumn(name = "artist_id"),
-      inverseJoinColumns = @JoinColumn(name = "song_id")
-  )
   private Set<Song> listSong = new HashSet<>();;
 
   public Artist(String name, String description) {

@@ -1,9 +1,7 @@
 package com.example.springrest.controllers;
 
 import com.example.springrest.dto.AlbumDTO;
-import com.example.springrest.dto.SongDTO;
-import com.example.springrest.entities.Album;
-import com.example.springrest.entities.Artist;
+
 import com.example.springrest.dto.ResponseObject;
 import com.example.springrest.services.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +36,7 @@ public class AlbumController {
         .body(new ResponseObject(200, "Found album id " + albumDTO.getId(), albumDTO));
   };
 
+  // TODO
   @PostMapping(value = "")
   public ResponseEntity<ResponseObject> insertAlbum(@RequestBody Map<String, String> params) {
     Optional<String> title = Optional.of(params.get("title"));

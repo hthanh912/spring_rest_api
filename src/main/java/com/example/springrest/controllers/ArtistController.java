@@ -6,22 +6,14 @@ import com.example.springrest.dto.SongDTO;
 import com.example.springrest.entities.Album;
 import com.example.springrest.entities.Artist;
 import com.example.springrest.dto.ResponseObject;
-import com.example.springrest.entities.Song;
 import com.example.springrest.respositories.AlbumRepository;
 import com.example.springrest.respositories.ArtistRepository;
-import com.example.springrest.respositories.SongRepository;
 import com.example.springrest.services.ArtistService;
-import com.example.springrest.services.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +52,7 @@ public class ArtistController {
     return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + artistDTO.getName(), artistDTO));
   }
 
+  // TODO
   @GetMapping(value = "/{id}/albums")
   public ResponseEntity<ResponseObject> getAlbumsByArtistId(@PathVariable Long id) {
     Optional<List<Album>> albums = Optional.ofNullable(albumRepository.findAllByArtistId(id));
@@ -71,6 +64,7 @@ public class ArtistController {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", null));
   }
 
+  // TODO
   @DeleteMapping(value = "/{id}")
   public ResponseEntity<ResponseObject> deleteArtist(@PathVariable Long id) {
     Optional<Artist> artist = artistRepository.findById(id);

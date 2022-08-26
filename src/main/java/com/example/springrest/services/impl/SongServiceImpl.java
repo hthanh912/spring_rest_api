@@ -63,17 +63,11 @@ public class SongServiceImpl implements SongService {
         .map(SongDTO::new)
         .toList();
   }
-
   @Override
   public SongDTO insertSong(String title, Long artistId, Long albumId) throws ResourceNotFoundException {
-    ArtistDTO artistDTO = this.artistService.getArtistById(artistId);
-    Artist artist = modelMapper.map(artistDTO, Artist.class);
-
-    AlbumDTO albumDTO = this.albumService.findById(albumId);
-    Album album = modelMapper.map(albumDTO, Album.class);
-
-    Song newSong = new Song(title, artist, album);
-    Song insertedSong = this.songRepository.save(newSong);
+    Artist artist = modelMapper.map(this.artistService.getArtistById(artistId), Artist.class);
+    Album album = modelMapper.map(this.albumService.findById(albumId), Album.class);
+    Song insertedSong = this.songRepository.save(new Song(title, artist, album));
     return new SongDTO(insertedSong);
   }
 
