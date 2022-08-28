@@ -2,10 +2,12 @@ package com.example.springrest.dto;
 
 import com.example.springrest.entities.Album;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class AlbumDTO {
   private Long id;
   private String title;
@@ -20,5 +22,4 @@ public class AlbumDTO {
     this.artistId = album.getArtist().getId();
     this.artistName = album.getArtist().getName();
   }
-
 }

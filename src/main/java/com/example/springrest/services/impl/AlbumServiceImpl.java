@@ -1,11 +1,11 @@
 package com.example.springrest.services.impl;
 
 import com.example.springrest.dto.AlbumDTO;
-import com.example.springrest.dto.ArtistDTO;
 import com.example.springrest.dto.SongDTO;
 import com.example.springrest.entities.Album;
 import com.example.springrest.entities.Artist;
 import com.example.springrest.respositories.AlbumRepository;
+import com.example.springrest.respositories.ArtistRepository;
 import com.example.springrest.services.AlbumService;
 import com.example.springrest.services.ArtistService;
 import com.example.springrest.services.SongService;
@@ -22,15 +22,20 @@ import java.util.List;
 public class AlbumServiceImpl implements AlbumService {
 
   private final AlbumRepository albumRepository;
+  private final ArtistRepository artistRepository;
   private final SongService songService;
-  private final ArtistService artistService;
   private static final ModelMapper modelMapper = new ModelMapper();
 
   @Autowired
-  public AlbumServiceImpl(AlbumRepository albumRepository, @Lazy SongService songService, @Lazy ArtistService artistService) {
+  public AlbumServiceImpl(
+      AlbumRepository albumRepository,
+      ArtistRepository artistRepository,
+      @Lazy SongService songService,
+      @Lazy ArtistService artistService)
+  {
     this.albumRepository = albumRepository;
+    this.artistRepository = artistRepository;
     this.songService = songService;
-    this.artistService = artistService;
   }
 
   @Override
@@ -51,11 +56,15 @@ public class AlbumServiceImpl implements AlbumService {
   }
 
   @Override
-  public AlbumDTO insertAlbum(String title, String description, Long artistId) {
-    ArtistDTO artistDTO = this.artistService.getArtistById(artistId);
-    Artist artist = modelMapper.map(artistDTO, Artist.class);
-    Album newAlbum = this.albumRepository.save(new Album(title, description, artist));
-    return new AlbumDTO(newAlbum);
+  public AlbumDTO insertAlbum(AlbumDTO albumDTO) {
+    if (!this.artistRepository.existsById(albumDTO.getArtistId())) {
+      throw new ResourceNotFoundException("Not found artist id " + albumDTO.getArtistId());
+    }
+    Artist artist = this.artistRepository.getReferenceById(albumDTO.getArtistId());
+    Album album = modelMapper.map(albumDTO, Album.class);
+    album.setArtist(artist);
+    Album insertedAlbum = this.albumRepository.save(album);
+    return new AlbumDTO(insertedAlbum);
   }
 
   @Override

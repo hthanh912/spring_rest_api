@@ -10,6 +10,7 @@ import com.example.springrest.respositories.AlbumRepository;
 import com.example.springrest.respositories.ArtistRepository;
 import com.example.springrest.services.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +22,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/artists")
 public class ArtistController {
-  @Autowired
-  ArtistRepository artistRepository;
-
-  @Autowired
-  AlbumRepository albumRepository;
-
   private final ArtistService artistService;
 
   @Autowired
@@ -37,13 +32,15 @@ public class ArtistController {
   @GetMapping("")
   public ResponseEntity<ResponseObject> getAllArtists() {
     List<ArtistDTO> listArtist = this.artistService.getAllArtist();
-    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "Found " + listArtist.size() + " artist(s)", listArtist));
+    return ResponseEntity.status(HttpStatus.OK).body(
+        new ResponseObject(HttpStatus.OK.value(), "Found " + listArtist.size() + " artist(s)", listArtist));
   }
 
   @PostMapping(value = "")
   public ResponseEntity<ResponseObject> insertArtist(@RequestBody Artist artist) {
     ArtistDTO insertedArtist = this.artistService.insertArtist(artist);
-    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Inserted " + insertedArtist.getName(), insertedArtist));
+    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(
+        HttpStatus.OK.value(), "Inserted " + insertedArtist.getName(), insertedArtist));
   }
 
   @GetMapping(value = "/{id}")
@@ -52,33 +49,24 @@ public class ArtistController {
     return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + artistDTO.getName(), artistDTO));
   }
 
-  // TODO
   @GetMapping(value = "/{id}/albums")
   public ResponseEntity<ResponseObject> getAlbumsByArtistId(@PathVariable Long id) {
-    Optional<List<Album>> albums = Optional.ofNullable(albumRepository.findAllByArtistId(id));
-    if (albums.isPresent()) {
-      List<AlbumDTO> albumDTOs = new ArrayList<AlbumDTO>();
-      albums.get().forEach(album -> albumDTOs.add(new AlbumDTO(album)));
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + albumDTOs.size() + " albums", albumDTOs));
-    }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(400, "Not Found", null));
+    List<AlbumDTO> albums = this.artistService.getAlbumByArtistId(id);
+    return ResponseEntity.status(HttpStatus.OK).body(
+        new ResponseObject(HttpStatus.OK.value(), "Found " + albums.size() + " albums", albums));
   }
 
-  // TODO
   @DeleteMapping(value = "/{id}")
   public ResponseEntity<ResponseObject> deleteArtist(@PathVariable Long id) {
-    Optional<Artist> artist = artistRepository.findById(id);
-    if (artist.isPresent()) {
-      artistRepository.deleteById(artist.get().getId());
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Deleted artist id " + id, null));
-    } else
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(200, "Not found artist id " + id, null));
+    this.artistService.deleteArtist(id);
+    return ResponseEntity.status(HttpStatus.OK).body(
+        new ResponseObject(HttpStatus.OK.value(), "Deleted artist id " + id));
   }
 
   @GetMapping("/{id}/songs")
-  public ResponseEntity<ResponseObject> getAllSongsByArtist(@PathVariable Long id) {
-    List<SongDTO> listSong = this.artistService.getSongByArtistId(id);
-    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200,"Found ", listSong));
+  public ResponseEntity<ResponseObject> getAllSongsByArtist(@PathVariable Long id, Pageable pageable) {
+    List<SongDTO> listSong = this.artistService.getSongByArtistId(id, pageable);
+    return ResponseEntity.status(HttpStatus.OK).body(
+        new ResponseObject(HttpStatus.OK.value(),"Foundz " + listSong.size() + "songs", listSong));
   }
-
 }

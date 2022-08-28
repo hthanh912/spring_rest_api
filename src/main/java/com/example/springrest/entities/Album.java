@@ -1,5 +1,6 @@
 package com.example.springrest.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "albums")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Album {
@@ -26,11 +28,4 @@ public class Album {
   @ManyToOne()
   @JoinColumn(name = "artist_id")
   private Artist artist;
-
-  public Album(String title, String description, Artist artist) {
-    this.title = title;
-    this.description = description;
-    this.artist = artist;
-  }
-
 }

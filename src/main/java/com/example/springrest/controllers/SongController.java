@@ -28,8 +28,8 @@ public class SongController {
   }
 
   @PostMapping("")
-  public ResponseEntity<ResponseObject> insertSong(@RequestParam String title, @RequestParam Long artistId, @RequestParam Long albumId) {
-    SongDTO insertedSong = this.songService.insertSong(title, artistId, albumId);
+  public ResponseEntity<ResponseObject> insertSong(@RequestBody SongDTO songDTO) {
+    SongDTO insertedSong = this.songService.insertSong(songDTO);
     return ResponseEntity.status(HttpStatus.OK)
         .body(new ResponseObject(HttpStatus.OK.value(), "inserted " + insertedSong.getTitle(), insertedSong));
   }

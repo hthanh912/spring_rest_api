@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/albums")
@@ -26,7 +24,8 @@ public class AlbumController {
   @GetMapping("")
   public ResponseEntity<ResponseObject> getAllAlbum() {
     List<AlbumDTO> albumDTOs = this.albumService.getAllAlbum();
-    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Found " + albumDTOs.size() + " artist(s)", albumDTOs));
+    return ResponseEntity.status(HttpStatus.OK).body(
+        new ResponseObject(200, "Found " + albumDTOs.size() + " artist(s)", albumDTOs));
   };
 
   @GetMapping("/{id}")
@@ -36,19 +35,11 @@ public class AlbumController {
         .body(new ResponseObject(200, "Found album id " + albumDTO.getId(), albumDTO));
   };
 
-  // TODO
   @PostMapping(value = "")
-  public ResponseEntity<ResponseObject> insertAlbum(@RequestBody Map<String, String> params) {
-    Optional<String> title = Optional.of(params.get("title"));
-    Optional<String> description = Optional.of(params.get("description"));
-    Optional<Long> artistId = Optional.of(Long.parseLong(params.get("artistId")));
-
-    if (title.isEmpty() || description.isEmpty() || artistId.isEmpty()) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseObject(HttpStatus.BAD_REQUEST.value(), "Bad Request " + artistId, null));
-    }
-
-    AlbumDTO insertedAlbumDTO = this.albumService.insertAlbum(title.get(), description.get(), artistId.get());
-    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, "Inserted " + insertedAlbumDTO.getTitle(), insertedAlbumDTO));
+  public ResponseEntity<ResponseObject> insertAlbum(@RequestBody AlbumDTO albumDTO) {
+    AlbumDTO insertedAlbum = this.albumService.insertAlbum(albumDTO);
+    return ResponseEntity.status(HttpStatus.OK).body(
+        new ResponseObject(200, "Inserted album " + insertedAlbum.getTitle(), insertedAlbum));
   };
 
   @DeleteMapping(value = "/{id}")
@@ -60,7 +51,7 @@ public class AlbumController {
 
   @GetMapping("/{id}/songs")
   public ResponseEntity<ResponseObject> getAllSongsByAlbums(@PathVariable Long id) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(new ResponseObject(HttpStatus.OK.value(), "Found "+ " song(s)", this.albumService.getAllSongByAlbumId(id)));
+    return ResponseEntity.status(HttpStatus.OK).body(
+        new ResponseObject(HttpStatus.OK.value(), "Found "+ " song(s)", this.albumService.getAllSongByAlbumId(id)));
   };
 }

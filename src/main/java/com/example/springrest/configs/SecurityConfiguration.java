@@ -9,13 +9,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ import java.io.PrintWriter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration implements WebMvcConfigurer {
 
   @Bean
   public UserDetailsService userDetailsService() {
@@ -45,22 +45,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     return authProvider;
   }
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.authenticationProvider(authenticationProvider());
-  }
-
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.authorizeRequests()
-        .antMatchers("/user").hasAuthority("USER")
-        .antMatchers(HttpMethod.POST, "/artists/**").hasAuthority("ADMIN")
-        .antMatchers(HttpMethod.DELETE, "/artists/**").hasAuthority("ADMIN")
-        .antMatchers(HttpMethod.POST, "/songs/**").hasAuthority("ADMIN")
-        .antMatchers(HttpMethod.DELETE, "/songs/**").hasAuthority("ADMIN")
-        .antMatchers(HttpMethod.POST, "/album/**").hasAuthority("ADMIN")
-        .antMatchers(HttpMethod.DELETE, "/album/**").hasAuthority("ADMIN")
-        .antMatchers("/**").permitAll()
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.authenticationProvider(authenticationProvider())
+        .authorizeRequests()
+        .antMatchers(HttpMethod.POST).hasAuthority("ADMIN")
+        .antMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
         .anyRequest().authenticated()
         .and()
         .formLogin().defaultSuccessUrl("/user/me")
@@ -70,12 +60,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         .exceptionHandling().accessDeniedHandler(new AccessDeniedExceptionHandler())
         .and()
-        .httpBasic();
-    http.cors().disable().csrf().disable();
-    ;
-  }
+        .httpBasic()
+        .and()
+        .cors().disable().csrf().disable();
+    return http.build()
+;  }
 
-  public class AccessDeniedExceptionHandler implements AccessDeniedHandler {
+  public static class AccessDeniedExceptionHandler implements AccessDeniedHandler {
     Gson gson = new Gson();
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,

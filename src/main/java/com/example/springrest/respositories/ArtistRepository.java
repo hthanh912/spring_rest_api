@@ -1,8 +1,6 @@
 package com.example.springrest.respositories;
 
 import com.example.springrest.entities.Artist;
-import com.example.springrest.entities.Song;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

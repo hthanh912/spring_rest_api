@@ -24,9 +24,6 @@ public class Artist {
   @Column(name = "description")
   private String description;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  private Set<Song> listSong = new HashSet<>();;
-
   public Artist(String name, String description) {
     this.name = name;
     this.description = description;
